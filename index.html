@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>오늘의 운세 - 연애·금전·건강 무료 카드 운세</title>
+  <meta name="description" content="매일 새로운 카드로 오늘의 연애운, 금전운, 건강운을 확인하세요. 무료 카드 운세, 카드 뽑기 한 번으로 하루를 시작하세요.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://USERNAME.github.io/today-tarot/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="오늘의 운세 - 연애·금전·건강 무료 운세">
+  <meta property="og:description" content="매일 새로운 카드로 오늘의 연애운, 금전운, 건강운을 확인하세요.">
+  <meta property="og:url" content="https://USERNAME.github.io/today-tarot/">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="오늘의 운세">
+  <!-- og:image — 1200×630 대표 이미지 경로를 넣으세요
+  <meta property="og:image" content="https://USERNAME.github.io/today-tarot/og-image.png"> -->
+
+  <!-- Google Search Console 소유권 확인 (발급받은 값으로 교체) -->
+  <!-- <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE"> -->
+
+  <!-- 네이버 서치어드바이저 소유권 확인 (발급받은 값으로 교체) -->
+  <!-- <meta name="naver-site-verification" content="YOUR_NAVER_VERIFICATION_CODE"> -->
+
+  <!-- Favicon (필요 시 파일 추가) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ====== 공유 모드 배지 (JS로 제어) ====== -->
+  <div id="share-badge" class="share-badge" hidden>
+    <span class="share-badge__text">👁️ 공유 결과 보기 모드</span>
+    <button id="btn-my-fortune" class="share-badge__btn" aria-label="내 운세 보기로 전환">내 운세 보기</button>
+  </div>
+
+  <!-- ====== 헤더 ====== -->
+  <header class="header">
+    <h1 class="header__title">🔮 오늘의 운세</h1>
+    <p class="header__sub">연애 · 금전 · 건강</p>
+  </header>
+
+  <!-- ====== 탭 네비게이션 ====== -->
+  <nav class="tab-bar" aria-label="메인 네비게이션">
+    <button class="tab-bar__btn tab-bar__btn--active" data-tab="fortune" aria-label="오늘의 운세">
+      🔮 오늘의 운세
+    </button>
+    <button class="tab-bar__btn" data-tab="gallery" aria-label="카드 도감">
+      🃏 카드 도감
+    </button>
+    <button class="tab-bar__btn" data-tab="report" aria-label="심화 리포트">
+      📋 심화 리포트
+    </button>
+  </nav>
+
+  <main class="main">
+
+    <!-- ══════════ 탭 1: 오늘의 운세 ══════════ -->
+    <div id="tab-fortune" class="tab-panel tab-panel--active">
+
+    <!-- ====== 카드 덱 섹션 ====== -->
+    <section id="card-deck" class="card-deck" aria-label="카드 덱">
+      <div class="cards-spread">
+        <div class="card-container" data-index="0">
+          <div class="card" aria-label="연애 카드">
+            <div class="card__back">
+              <div class="card__back-inner">
+                <span class="card__back-symbol">✦</span>
+                <span class="card__back-label">연애</span>
+              </div>
+            </div>
+            <div class="card__front" id="card-front-love">
+              <span class="card__front-symbol"></span>
+              <span class="card__front-title"></span>
+            </div>
+          </div>
+        </div>
+        <div class="card-container" data-index="1">
+          <div class="card" aria-label="금전 카드">
+            <div class="card__back">
+              <div class="card__back-inner">
+                <span class="card__back-symbol">✦</span>
+                <span class="card__back-label">금전</span>
+              </div>
+            </div>
+            <div class="card__front" id="card-front-money">
+              <span class="card__front-symbol"></span>
+              <span class="card__front-title"></span>
+            </div>
+          </div>
+        </div>
+        <div class="card-container" data-index="2">
+          <div class="card" aria-label="건강 카드">
+            <div class="card__back">
+              <div class="card__back-inner">
+                <span class="card__back-symbol">✦</span>
+                <span class="card__back-label">건강</span>
+              </div>
+            </div>
+            <div class="card__front" id="card-front-health">
+              <span class="card__front-symbol"></span>
+              <span class="card__front-title"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-draw" class="btn btn--draw" aria-label="카드 뽑기">
+        🃏 카드 뽑기
+      </button>
+    </section>
+
+    <!-- ====== 결과 섹션 (초기 숨김) ====== -->
+    <section id="results" class="results" hidden aria-label="운세 결과">
+
+      <!-- 연애 결과 -->
+      <article class="result-card result-card--love" id="result-love" aria-label="연애운 결과">
+        <div class="result-card__header">
+          <span class="result-card__icon">💕</span>
+          <h2 class="result-card__category">연애운</h2>
+        </div>
+        <p class="result-card__core" id="core-love"></p>
+        <div class="result-card__details" id="details-love"></div>
+        <div class="result-card__actions">
+          <div class="action action--do">
+            <span class="action__label">✅ 하면 좋은 것</span>
+            <p class="action__text" id="do-love"></p>
+          </div>
+          <div class="action action--dont">
+            <span class="action__label">❌ 피하면 좋은 것</span>
+            <p class="action__text" id="dont-love"></p>
+          </div>
+        </div>
+      </article>
+
+      <!-- === AdSense 슬롯 위치 1: 연애 결과 아래 ===
+      <div class="ad-slot" aria-hidden="true">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+      =========================================== -->
+
+      <!-- 금전 결과 -->
+      <article class="result-card result-card--money" id="result-money" aria-label="금전운 결과">
+        <div class="result-card__header">
+          <span class="result-card__icon">💰</span>
+          <h2 class="result-card__category">금전운</h2>
+        </div>
+        <p class="result-card__core" id="core-money"></p>
+        <div class="result-card__details" id="details-money"></div>
+        <div class="result-card__actions">
+          <div class="action action--do">
+            <span class="action__label">✅ 하면 좋은 것</span>
+            <p class="action__text" id="do-money"></p>
+          </div>
+          <div class="action action--dont">
+            <span class="action__label">❌ 피하면 좋은 것</span>
+            <p class="action__text" id="dont-money"></p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 건강 결과 -->
+      <article class="result-card result-card--health" id="result-health" aria-label="건강운 결과">
+        <div class="result-card__header">
+          <span class="result-card__icon">💚</span>
+          <h2 class="result-card__category">건강운</h2>
+        </div>
+        <p class="result-card__core" id="core-health"></p>
+        <div class="result-card__details" id="details-health"></div>
+        <div class="result-card__actions">
+          <div class="action action--do">
+            <span class="action__label">✅ 하면 좋은 것</span>
+            <p class="action__text" id="do-health"></p>
+          </div>
+          <div class="action action--dont">
+            <span class="action__label">❌ 피하면 좋은 것</span>
+            <p class="action__text" id="dont-health"></p>
+          </div>
+        </div>
+      </article>
+
+      <!-- === AdSense 슬롯 위치 2: 전체 결과 아래 ===
+      <div class="ad-slot" aria-hidden="true">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+      =========================================== -->
+
+      <!-- 오락용 안내 -->
+      <p class="disclaimer">본 결과는 오락용 콘텐츠이며, 실제 운세를 보장하지 않습니다.</p>
+
+      <!-- 액션 버튼 -->
+      <div class="result-actions">
+        <button id="btn-redraw" class="btn btn--redraw" aria-label="카드 다시 뽑기">
+          🔄 다시 뽑기
+        </button>
+        <button id="btn-share" class="btn btn--share" aria-label="결과 공유하기">
+          📤 결과 공유
+        </button>
+      </div>
+
+      <!-- 공유 완료 토스트 (JS로 제어) -->
+      <div id="toast" class="toast" hidden aria-live="polite">링크가 클립보드에 복사되었습니다!</div>
+
+      <!-- ====== 추천 콘텐츠 (카드 결과 기반, JS 동적 렌더링) ====== -->
+      <section class="affiliate" aria-label="추천 콘텐츠">
+        <h3 class="affiliate__title">오늘의 카드에 맞는 추천</h3>
+        <p class="affiliate__sub">당신의 운세 결과에 어울리는 콘텐츠예요</p>
+        <div id="affiliate-cards" class="affiliate__cards">
+          <!-- JS에서 카드 결과 기반으로 동적 생성 -->
+        </div>
+      </section>
+
+      <!-- ====== 심화 리포트 CTA ====== -->
+      <section class="premium-cta" aria-label="심화 리포트">
+        <div class="premium-cta__inner">
+          <h3 class="premium-cta__title">🔮 심화 리포트 보기</h3>
+          <p class="premium-cta__desc">카드별 상세 해석, 행운 요소, 종합 분석을 확인하세요.</p>
+          <button id="btn-go-report" class="btn btn--go-report" aria-label="심화 리포트 탭으로 이동">
+            📋 심화 리포트 보기
+          </button>
+        </div>
+      </section>
+
+    </section><!-- /results -->
+
+    </div><!-- /tab-fortune -->
+
+    <!-- ══════════ 탭 2: 카드 도감 ══════════ -->
+    <div id="tab-gallery" class="tab-panel" hidden>
+      <h2 class="tab-section-title">🃏 카드 도감</h2>
+      <p class="tab-section-desc">12장의 아키타입 카드와 각 카테고리별 의미를 확인해 보세요.</p>
+
+      <div id="gallery-grid" class="gallery-grid" aria-label="전체 카드 목록">
+        <!-- JS에서 12장 카드 렌더링 -->
+      </div>
+
+      <!-- 카드 상세 모달 -->
+      <div id="gallery-modal" class="gallery-modal" hidden aria-modal="true" role="dialog">
+        <div class="gallery-modal__backdrop"></div>
+        <div class="gallery-modal__content">
+          <button class="gallery-modal__close" aria-label="닫기">&times;</button>
+          <div class="gallery-modal__header">
+            <span id="modal-symbol" class="gallery-modal__symbol"></span>
+            <h3 id="modal-title" class="gallery-modal__title"></h3>
+          </div>
+          <div id="modal-body" class="gallery-modal__body">
+            <!-- JS에서 3 카테고리별 해석 렌더링 -->
+          </div>
+        </div>
+      </div>
+    </div><!-- /tab-gallery -->
+
+    <!-- ══════════ 탭 3: 심화 리포트 ══════════ -->
+    <div id="tab-report" class="tab-panel" hidden>
+      <h2 class="tab-section-title">📋 심화 리포트</h2>
+
+      <!-- 카드 미뽑기 상태 -->
+      <div id="report-empty" class="report-empty">
+        <p class="report-empty__icon">🔮</p>
+        <p class="report-empty__text">먼저 <strong>오늘의 운세</strong> 탭에서 카드를 뽑아주세요.</p>
+        <button id="btn-go-fortune" class="btn btn--go-report" aria-label="오늘의 운세 탭으로 이동">오늘의 운세로 가기</button>
+      </div>
+
+      <!-- 리포트 본문 (카드 뽑은 후 표시) -->
+      <div id="report-content" class="report-content" hidden>
+
+        <!-- 오늘의 카드 조합 요약 -->
+        <section class="report-section report-combo">
+          <h3 class="report-section__title">오늘의 카드 조합</h3>
+          <div id="report-combo-cards" class="report-combo__cards"></div>
+          <p id="report-combo-msg" class="report-combo__msg"></p>
+        </section>
+
+        <!-- 행운 요소 -->
+        <section class="report-section report-lucky">
+          <h3 class="report-section__title">오늘의 행운 요소</h3>
+          <div id="report-lucky-grid" class="report-lucky__grid"></div>
+        </section>
+
+        <!-- 카테고리별 상세 분석 -->
+        <section class="report-section" id="report-love">
+          <h3 class="report-section__title">💕 연애운 상세 분석</h3>
+          <div class="report-section__body" id="report-love-body"></div>
+        </section>
+
+        <section class="report-section" id="report-money">
+          <h3 class="report-section__title">💰 금전운 상세 분석</h3>
+          <div class="report-section__body" id="report-money-body"></div>
+        </section>
+
+        <section class="report-section" id="report-health">
+          <h3 class="report-section__title">💚 건강운 상세 분석</h3>
+          <div class="report-section__body" id="report-health-body"></div>
+        </section>
+
+        <!-- 종합 한마디 -->
+        <section class="report-section report-summary">
+          <h3 class="report-section__title">종합 한마디</h3>
+          <p id="report-summary-text" class="report-summary__text"></p>
+        </section>
+
+        <p class="disclaimer">본 결과는 오락용 콘텐츠이며, 실제 운세를 보장하지 않습니다.</p>
+      </div>
+    </div><!-- /tab-report -->
+
+  </main>
+
+  <!-- ====== 푸터 ====== -->
+  <footer class="footer">
+    <p class="footer__copy">&copy; 2026 오늘의 운세 · 오락 목적 콘텐츠</p>
+    <details class="footer__details">
+      <summary>수익화 안내</summary>
+      <p>수익화는 아래와 같이 단계적으로 진행됩니다.</p>
+      <ul>
+        <li>1단계: Google AdSense 광고 — 슬롯 자리 확보 완료, 승인 후 적용 예정</li>
+        <li>2단계: 제휴 콘텐츠 — 카드 결과 기반 추천 시스템 구현 완료, 실제 제휴 링크 연결 예정</li>
+        <li>3단계: 심화 리포트 — 무료 제공 중, 향후 프리미엄 전용 콘텐츠 확장 예정</li>
+      </ul>
+    </details>
+  </footer>
+
+  <!-- AdSense 스크립트 삽입 위치 (승인 후 아래 주석 해제)
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  -->
+
+  <script src="app.js"></script>
+</body>
+</html>
